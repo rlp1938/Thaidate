@@ -53,15 +53,6 @@ static progdata
 int main(int argc, char **argv)
 {
 	options_t opts = process_options(argc, argv);
-	/* input options */
-	if (opts.o_m) printf("%d\n", opts.o_m);	// -m, --mdy
-	if (opts.o_d) printf("%d\n", opts.o_d);	// -d, --dmy
-	if (opts.o_y) printf("%d\n", opts.o_y);	// -y, --ymd
-	/* output options */
-	if (opts.o_Y) printf("%d\n", opts.o_Y);	// -Y, --YMD
-	if (opts.o_D) printf("%d\n", opts.o_D);	// -D, --DMY
-	if (opts.o_r) printf("%d\n", opts.o_r);	// -r, --real-thai
-
 	progdata *pd = validate_input(&opts, argv);
 
 	free(pd);	//nothing more to do, no pointers inside the struct.
