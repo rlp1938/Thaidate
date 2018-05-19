@@ -40,6 +40,7 @@ typedef struct progdata {
 	int yerin;
 	int yerout;
 	int wantreal;
+	int oporder;	// 0 = default, dd mmm yyyy else yyyy mmm dd
 } progdata;
 
 #include "str.h"
@@ -48,13 +49,18 @@ typedef struct progdata {
 
 static progdata
 *validate_input(options_t *opts, char **argv);
+static char
+*generateop(progdata *pd);
+static char
+*genthaidigits(int num);
 
 
 int main(int argc, char **argv)
 {
 	options_t opts = process_options(argc, argv);
 	progdata *pd = validate_input(&opts, argv);
-
+	char *opstr = generateop(pd);
+	fprintf(stdout, "%s\n", opstr);
 	free(pd);	//nothing more to do, no pointers inside the struct.
 	return 0;
 }//main()
@@ -94,8 +100,84 @@ progdata
 	}
 	// validate year.
 	int leap = (y % 4 == 0);
-	printf("%d\n", leap);
-
+	leap = (leap && !(y % 100 == 0));
+	leap = (leap || (y % 400 == 0));
+	// validate day in month.
+	int dim[13] = {-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	if (leap) dim[2] = 29;
+	if (!(d > 0 && d <= dim[m])) {
+		fprintf(stderr, "Invalid days: %d for month: %d\n", d, m);
+		exit(EXIT_FAILURE);
+	}
 	progdata *res = xmalloc(sizeof(progdata));
+	res->dayin = d;
+	res->monin = m;
+	res->yerin = y;
+	res->yerout = y + 543;
+	res->wantreal = opts->o_r;
+	res->oporder = opts->o_Y;	// 1 is yyyy mmm dd, 0 dd mmm yyyy
 	return res;
 } // validate_input()
+
+static char
+*generateop(progdata *pd)
+{/* build the output string */
+	char *monamesth[] = {"none", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
+						"พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม",
+						"กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"};
+	// has max length 27 (november). 3 chars per visible char.
+	char thmoname[32];
+	strcpy(thmoname, monamesth[pd->monin]);
+	char daysth[8];		// 2 days * 3 + '\0' is 7 needed.
+	char yearth[16];	// 4 digits * 3 + '\0' is 13 needed.
+	if (pd->wantreal) {	// buffers have to be bigger
+		char *cp = genthaidigits(pd->dayin);
+		strcpy(daysth, cp);
+		cp = genthaidigits(pd->yerout);
+		strcpy(yearth, cp);
+	} else {
+		sprintf(daysth, "%d", pd->dayin);
+		sprintf(yearth, "%d", pd->yerout);
+	}
+	static char outbuf[PATH_MAX];
+	// outut order ymd or dmy
+	if (pd->oporder) {	// ymd
+		sprintf(outbuf, "%s %s %s", yearth, thmoname, daysth);
+	} else {	// dmy
+		sprintf(outbuf, "%s %s %s", daysth, thmoname, yearth);
+	}
+	return outbuf;
+}
+
+char
+*genthaidigits(int num)
+{/* given an abitrary integer, return a Thai digit string */
+	char *digitnamesth[] = {"๐", "๑", "๒", "๓", "๔", "๕", "๖", "๗",
+						   /*0    1    2    3    4    5    6    7*/
+							"๘", "๙"};
+						   /*8    9 */
+	static char buffer[NAME_MAX];
+	buffer[0] = 0;
+	sprintf(buffer, "%d", num);
+	int l = strlen(buffer);
+	// sanity check
+	if (3 * l + 1 > NAME_MAX) {
+		fprintf(stderr, "Your number %d, is too large.\n", num);
+		exit(EXIT_FAILURE);
+	}
+	int i;
+	int exp = 1;
+	for (i = 0; i < l; i++) {
+		exp *= 10;
+	}
+	exp /= 10;	// a digit too long
+	int divby = exp;
+	buffer[0] = 0;
+	for (i = 0; i < l; i++) {
+		int dd = num / divby;
+		strcat(buffer, digitnamesth[dd]);
+		num %= divby;
+		divby /= 10;
+	}
+	return buffer;
+}
