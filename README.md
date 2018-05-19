@@ -24,10 +24,9 @@ Western calendar. This increment is added to the output year.
 
 ## OPTIONS
 
-+ **-h**, **--help**
-print help information and exit.
++ **-h**, **--help**  print help information and exit.
 
-:  **-m**, **--mdy**
++ **-m**, **--mdy**
 order the input date fields as month, day and year.
 
 :  **-d**, **--dmy**
