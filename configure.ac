@@ -23,7 +23,7 @@ AC_TYPE_SIZE_T
 AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([memchr memmove memset strchr strdup])
+AC_CHECK_FUNCS([memchr memmove memset strchr strdup strtol])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
