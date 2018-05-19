@@ -1,21 +1,19 @@
 # thaidate
 
-THAIDATE
-Linux Programmer's Manual
-%%mtime(%Y-%m-%d)
-
-= NAME =
+## NAME
 **thaidate** - accepts 3 numbers, year, month and day, and outputs
 a date string in Thai language with the month using the Thai name.
 
 
-= SYNOPSIS =
+## SYNOPSIS
+
 **thaidate** [option] **y m d**.
 
-= DESCRIPTION =
+## DESCRIPTION
+
 **thaidate** accepts as input, 3 numbers which by default must be in
-order of 4 digit year, month number [1..12], and day [1..//maxday//],
-where //maxday// is calculated by month and year. You may alter the
+order of 4 digit year, month number [1..12], and day [1..*maxday*],
+where *maxday* is calculated by month and year. You may alter the
 default order of input fields using options.
 
 By default the **output** order is **d m y** and also by default Latin
@@ -24,9 +22,9 @@ digits are used for the numbers, **d** and **y**.
 The Thai calendar year is 543 years ahead of the normally accepted
 Western calendar. This increment is added to the output year.
 
-= OPTIONS =
+## OPTIONS
 
-:  **-h**, **--help**
++ **-h**, **--help**
 print help information and exit.
 
 :  **-m**, **--mdy**
