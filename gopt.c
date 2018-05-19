@@ -25,8 +25,6 @@
 
 options_t process_options(int argc, char **argv)
 {
-	synopsis = thesynopsis();
-	helptext = thehelp();
 	optstring = ":hmdyYDr";
 
 	/* declare and set defaults for local variables. */
@@ -110,41 +108,14 @@ options_t process_options(int argc, char **argv)
 } // process_options()
 
 void dohelp(int forced)
-{
-  if(strlen(synopsis)) fputs(synopsis, stderr);
-  fputs(helptext, stderr);
-  exit(forced);
+{/* invoke manpage instead of trying to keep 2 sets of text synced. */
+	char command[NAME_MAX];
+	// so where is the manpage?
+	if (exists_file("./thaidate.1")) {	// development time.
+		sprintf(command, "man ./thaidate.1");
+	} else {
+		sprintf(command, "man thaidate.1");
+	}
+	xsystem(command, 1);
+	exit(forced);
 } // dohelp()
-
-char *thesynopsis(void)
-{ /* Moved this text off the top of the page. */
-	char *ret =
-  "\tSYNOPSIS\n"
-  "\t\tthaidate [option] program_name\n\n"
-  "\tDESCRIPTION\n"
-  "\tMake necessary explanation of the purpose and features of the program."
-  "\n\n";
-	return ret;
-} // thesynopsis()
-
-char *thehelp(void)
-{
-	char *ret =
-  "\tOPTIONS\n"
-  "\t-h, --help\n"
-  "\tOutputs this help message and then quits.\n\n"
-  "\t-m, --mdy \n"
-  "\tSets opts.o_m to 1, the default is 0.\n\n"
-  "\t-d, --dmy \n"
-  "\tSets opts.o_d to 1, the default is 0.\n\n"
-  "\t-y, --ymd \n"
-  "\tSets opts.o_y to 1, the default is 0.\n\n"
-  "\t-Y, --YMD \n"
-  "\tSets opts.o_Y to 1, the default is 0.\n\n"
-  "\t-D, --DMY \n"
-  "\tSets opts.o_D to 1, the default is 0.\n\n"
-  "\t-r, --real-thai \n"
-  "\tSets opts.o_r to 1, the default is 0.\n\n"
-  "\n\n";
-	return ret;
-} // thehelp()

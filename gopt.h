@@ -21,8 +21,6 @@
 #ifndef GOPT_H
 #define GOPT_H
 char *optstring;
-char *helptext;
-char *synopsis;
 
 typedef struct options_t {	// to be initialised with required vars.
 	int	 o_m;	// -m, --mdy
@@ -36,7 +34,5 @@ typedef struct options_t {	// to be initialised with required vars.
 
 void dohelp(int forced);
 options_t process_options(int argc, char **argv);
-char *thehelp(void);
-char *thesynopsis(void);
 
 #endif
