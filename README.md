@@ -28,22 +28,22 @@ Western calendar. This increment is added to the output year.
 print help information and exit.
 
 + **-m**, **--mdy**  
-order the input date fields as month, day and year.
+order the **input** date fields as month, day and year.
 
 + **-d**, **--dmy**  
-order the input date fields as day, month and year.
+order the **input** date fields as day, month and year.
 
 + **-y**, **--ymd**  
-order the input date fields as year, month and day. This is actually the
-default.
+order the **input** date fields as year, month and day. This is
+actually the default.
 
 + **-Y**, **--YMD**  
-orders the **output** field as year, month, day. This the officially
-recognised Thai date format. But in spite of this, the //default//
+orders the **output** fields as year, month, day. This the officially
+recognised Thai date format. But in spite of this, the _default_
 output ordering is more usual.
 
 + **-D**, **--DMY**  
-orders the **output** field as day, month, year. This the most common
+orders the **output** fields as day, month, year. This the most common
 Thai date format, and it is the default.
 
 + **-r**, **--real-thai**  
