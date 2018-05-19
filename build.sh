@@ -25,4 +25,4 @@ gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 files.c
 gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 gopt.c
 gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 str.c
 gcc thaidate.o files.o gopt.o str.o -o thaidate
-#rm *.o
+rm *.o
