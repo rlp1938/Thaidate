@@ -4,7 +4,7 @@ Installation Instructions
 The GNU instructions are based on the idea that you have extracted
 the source from a tarball.
 
-This however is an autotools base project so there is no configure
+This however is an autotools based project so there is no configure
 script provided. It is expected that it will be generated from
 configure.ac.
 
@@ -21,6 +21,20 @@ debugger. So consequently I also provide `build.sh`.
 Possibly Linux users in general, or at least Debian based users in
 particular, may only need to `./build.sh` in order to avoid the
 autotools and tarball mess altogether.
+
+Start with `./build.sh -h` to learn options.
+
+Investigation has revealed that 'autotools' is so broken as to be
+useless.
+
+I will provide an installation script ASAP but in the meanwhile I
+recommend the following procedure:
+
+Build the system, `autoreconf -i` as above.
+./configure && make && sudo make install	# manpage and other shares.
+`./build.sh -o`	# optimised, you can do a debug build.
+`sudo cp <program_name> /usr/local/bin/`
+`mv` may be better than `cp` if you want to keep your build dir clean.
 
 Finally, for those who feel more comfortable using tarballs, I will
 generate and send one by email on request. Please email me at
