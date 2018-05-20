@@ -1,28 +1,52 @@
 #!/bin/bash
 #
-# build.sh - script to build a program under construction.
-#
-# Copyright 2017 Robert L (Bob) Parker rlp1938@gmail.com
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.# See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
-#
+# build.sh - script to build a C program, options allow optimisation
+#            or build for `gdb`.
 
 
-gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 thaidate.c
-gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 files.c
-gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 gopt.c
-gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 str.c
+# set defaults
+debug=1;
+verbose=0;
+
+# write actual usage
+usage () {
+	echo;
+	echo "./build.sh [option]"; echo;
+	echo options;
+	echo -h print help message and exit;
+	echo '-d generate debug code (default)';
+	echo '-o generate optimised code (O2)';
+}
+
+# options string
+options=':ohd'
+# the leading ':' in options string is required for the errors cases.
+
+while getopts $options option
+do
+	case $option in
+		o  ) debug=0;;
+		d  ) debug=1;;
+		h  ) usage; exit;;
+		\? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
+		:  ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
+		*  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
+	esac
+done
+
+if [ $debug == 1 ]
+then
+	gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 thaidate.c
+	gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 files.c
+	gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 gopt.c
+	gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 str.c
+else
+	gcc -Wall -Wextra -O2 -c -D_GNU_SOURCE=1 thaidate.c
+	gcc -Wall -Wextra -O2 -c -D_GNU_SOURCE=1 files.c
+	gcc -Wall -Wextra -O2 -c -D_GNU_SOURCE=1 gopt.c
+	gcc -Wall -Wextra -O2 -c -D_GNU_SOURCE=1 str.c
+fi
+
+# link stage
 gcc thaidate.o files.o gopt.o str.o -o thaidate
 rm *.o
