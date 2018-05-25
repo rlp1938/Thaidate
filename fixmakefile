@@ -2,20 +2,17 @@
 #
 # build.sh - script to build a C program, options allow optimisation
 #            or build for `gdb`.
-
-
 # set defaults
 debug=1;
-verbose=0;
 
 # write actual usage
 usage () {
 	echo;
-	echo "./build.sh [option]"; echo;
+	echo "./fixmake [option]"; echo;
 	echo options;
 	echo -h print help message and exit;
-	echo '-d generate debug code (default)';
-	echo '-o generate optimised code (O2)';
+	echo '-d, set debug mode (default)';
+	echo '-o, set optimised mode (O2)';
 }
 
 # options string
@@ -34,19 +31,16 @@ do
 	esac
 done
 
+tofind=$(grep 'CFLAGS =' Makefile |grep -v AM_CFLAGS)
+
 if [ $debug == 1 ]
 then
-	gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 thaidate.c
-	gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 files.c
-	gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 gopt.c
-	gcc -Wall -Wextra -g -O0 -c -D_GNU_SOURCE=1 str.c
+	torepl="CFLAGS = -g -O0"
 else
-	gcc -Wall -Wextra -O2 -c -D_GNU_SOURCE=1 thaidate.c
-	gcc -Wall -Wextra -O2 -c -D_GNU_SOURCE=1 files.c
-	gcc -Wall -Wextra -O2 -c -D_GNU_SOURCE=1 gopt.c
-	gcc -Wall -Wextra -O2 -c -D_GNU_SOURCE=1 str.c
+	torepl="CFLAGS = -O2"
 fi
+exp=s/"$tofind"/"$torepl"/
+echo "$exp"
+sed -e "$exp" Makefile > X
+mv X Makefile
 
-# link stage
-gcc thaidate.o files.o gopt.o str.o -o thaidate
-rm *.o
